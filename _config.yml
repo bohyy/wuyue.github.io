@@ -1,0 +1,83 @@
+# Jekyll Configuration for GitHub Pages
+# Yue Wu Portfolio Site
+
+# Site settings
+title: "Yue Wu"
+description: "Graduate student in new media specializing in VR, Avatar, and digital design"
+author: "Yue Wu"
+email: "978294391@qq.com"
+url: "https://wuyue.github.io" # 替换为你的 GitHub Pages URL
+baseurl: "" # 如果使用项目仓库而不是 username.github.io，这里填写仓库名，如 "/yue-wu-portfolio"
+
+# Social links
+github_username: bohyy # 替换为你的 GitHub 用户名
+email: 978294391@qq.com
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
+
+# Include files
+include:
+  - _pages
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /:collection/:name/
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+
+# SEO settings
+lang: en_US
+timezone: Asia/Chengdu
+
+# Google Analytics (optional)
+# google_analytics: UA-XXXXXXXX-X
+
+# Social media (optional)
+social:
+  name: Yue Wu
+  links:
+    - https://github.com/bohyy
+
+# Site verification (optional)
+# google_site_verification: "verification_string"
+
+# Performance settings
+sass:
+  style: compressed
+
+# Security settings
+safe: true
+incremental: false
