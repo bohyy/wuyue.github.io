@@ -1,154 +1,372 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yue Wu / Portfolio</title>
-  <!-- Link to local Tailwind CSS file -->
-  <link href="dist/tailwind.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      display: flex;
-    }
-    .sidebar {
-      width: 250px;
-      background: #f8f9fa;
-      padding: 20px;
-      position: fixed;
-      height: 100%;
-      overflow-y: auto;
-    }
-    .main-content {
-      margin-left: 270px;
-      padding: 20px;
-      width: calc(100% - 270px);
-    }
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
-      height: 0;
-      overflow: hidden;
-    }
-    .video-container video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        position: relative;
-        height: auto;
-      }
-      .main-content {
-        margin-left: 0;
-        width: 100%;
-      }
-    }
-  </style>
+  <meta name="description" content="Yue Wu Portfolio - Showcase of VR, Mixed Reality, and digital design works">
+  <meta name="keywords" content="Portfolio, VR Art, Digital Design, Mixed Reality, Creative Works">
+  <title>Portfolio - Yue Wu</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 </head>
 <body class="bg-gray-100">
   <!-- Sidebar -->
   <div class="sidebar">
-    <img src="images/profile.jpg" alt="Yue Wu" class="w-32 h-32 rounded-full mx-auto mb-4">
-    <h1 class="text-xl font-bold text-center">Yue Wu</h1>
-    <p class="text-center text-gray-700 mb-4">Graduate student in Fine Arts at Sichuan Normal University, with a background in Computer Science. Specializing in VR, Mixed Reality, and digital design. 🌟</p>
-    <ul class="space-y-2">
-      <li><a href="mailto:978294391@qq.com" class="text-blue-600 hover:underline">Email</a></li>
-      <li><a href="https://github.com/yourusername" class="text-blue-600 hover:underline">GitHub</a></li>
-    </ul>
-    <!-- Additional Photo Section -->
-    <div class="mt-4">
-      <img src="images/additional-photo.jpg" alt="Additional Photo" class="w-32 h-32 rounded mx-auto">
-      <p class="text-center text-gray-600 text-sm mt-2">Additional Photo</p>
+    <img src="image/1.jpg" alt="Yue Wu" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
+    <h1 class="text-xl font-bold text-center text-gray-800">Yue Wu</h1>
+    <p class="text-center text-gray-700 mb-4 text-sm">Graduate student in Fine Arts at Sichuan Normal University, with a background in Computer Science. Specializing in VR, Mixed Reality, and digital design. 🌟</p>
+    
+    <div class="space-y-2 mb-4">
+      <a href="mailto:978294391@qq.com" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+        </svg>
+        Email
+      </a>
+      <a href="https://github.com/bohyy" target="_blank" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"></path>
+        </svg>
+        GitHub
+      </a>
     </div>
+    
+
   </div>
 
   <!-- Main Content -->
   <div class="main-content">
     <!-- Navigation -->
-    <nav class="bg-[#CFC4BA] bg-opacity-80 text-white p-4 mb-4">
-      <div class="flex space-x-4">
-        <a href="index.html" class="hover:underline">Home</a>
-        <a href="cv.html" class="hover:underline">CV</a>
-        <a href="projects.html" class="hover:underline">Projects</a>
-        <a href="portfolio.html" class="hover:underline">Portfolio</a>
+    <nav class="bg-gradient-to-r from-amber-100 to-amber-200 shadow-sm rounded-lg p-4 mb-6">
+      <div class="flex flex-wrap gap-4">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="cv.html" class="nav-link">CV</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="portfolio.html" class="nav-link active">Portfolio</a>
       </div>
     </nav>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="mb-8">
-      <h2 class="text-2xl font-bold mb-2">Portfolio</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Project 1: VR-Mindfulness Fusion -->
-        <div class="bg-white shadow-md rounded-lg p-4">
-          <h3 class="text-xl font-semibold">VR-Mindfulness Fusion: Reducing Emotional Stress Through Immersive Meditation</h3>
-          <p class="text-gray-700 mt-2">Implemented biofeedback-integrated VR meditation, achieving a 30% reduction in stress levels. Developed a dynamic VR environment with Unity and EEG data, improving focus retention by 25%. Solved motion sickness with gradual transitions, reducing dropout rates by 40%.</p>
-          <img src="images/project1.jpg" alt="VR-Mindfulness Fusion" class="w-full h-48 object-cover mt-4 rounded">
-          <div class="video-container mt-4">
-            <video controls>
-              <source src="videos/project1.mp4" type="video/mp4">
-              Your browser does not support video playback.
-            </video>
-          </div>
-        </div>
+    <!-- Portfolio Header -->
+    <section class="mb-8 bg-white rounded-lg shadow-sm p-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-4">Creative Portfolio 🎨</h1>
+      <p class="text-gray-600 text-lg">A curated collection of my creative works spanning VR experiences, digital art, interactive installations, and award-winning designs.</p>
+    </section>
 
-        <!-- Project 2: Transforming Classroom Engagement -->
-        <div class="bg-white shadow-md rounded-lg p-4">
-          <h3 class="text-xl font-semibold">Transforming Classroom Engagement: VR Avatars as Interactive Instructors</h3>
-          <p class="text-gray-700 mt-2">Developed VR avatars with gaze-tracking, achieving 20% higher student attention. Built a procedural animation system with Unreal Engine 5, reducing uncanny valley effects by 35%. Increased participation by 50% with AI-driven Q&A avatars.</p>
-          <img src="images/project2.jpg" alt="VR Avatars" class="w-full h-48 object-cover mt-4 rounded">
-          <div class="video-container mt-4">
-            <video controls>
-              <source src="videos/project2.mp4" type="video/mp4">
-              Your browser does not support video playback.
-            </video>
-          </div>
+    <!-- Filter Tabs -->
+    <section class="mb-8">
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <div class="flex flex-wrap gap-2" id="filterTabs">
+          <button class="filter-btn active" data-filter="all">All Works</button>
+          <button class="filter-btn" data-filter="vr">VR Experiences</button>
+          <button class="filter-btn" data-filter="digital">Digital Art</button>
+          <button class="filter-btn" data-filter="interactive">Interactive Media</button>
+          <button class="filter-btn" data-filter="awards">Award Winners</button>
         </div>
       </div>
     </section>
+
+    <!-- Portfolio Grid -->
+    <section class="mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolioGrid">
+        
+       
+        <!-- VR Classroom Avatars -->
+        <div class="portfolio-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-category="vr interactive">
+          <div class="relative group">
+            <img src="image/2.jpg" alt="VR Classroom Avatars" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button class="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors" onclick="openModal('modal2')">
+                View Details
+              </button>
+            </div>
+            <div class="absolute top-2 left-2">
+              <span class="bg-purple-500 text-white px-2 py-1 rounded text-xs">Interactive</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">VR Classroom Avatars</h3>
+            <p class="text-gray-600 text-sm mb-3">AI-driven interactive instructors for immersive education</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500">2024</span>
+              <div class="flex gap-1">
+                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      
+
+        <!-- Lia's Metaverse Diary -->
+        <div class="portfolio-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-category="digital awards">
+          <div class="relative group">
+            <img src="image/3.png" alt="Lia's Metaverse Diary" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button class="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors" onclick="openModal('modal4')">
+                View Details
+              </button>
+            </div>
+            <div class="absolute top-2 left-2">
+              <span class="bg-gray-600 text-white px-2 py-1 rounded text-xs">🥈 National Prize</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Lia's Metaverse Diary</h3>
+            <p class="text-gray-600 text-sm mb-3">AIGC video creative design with AR</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500">2024</span>
+              <div class="flex items-center">
+                <span class="text-gray-500 text-xs">★★★★☆</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Earth's Corner -->
+        <div class="portfolio-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-category="digital awards">
+          <div class="relative group">
+            <img src="image/4.png" alt="The Story of Sanxingdui​" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button class="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors" onclick="openModal('modal5')">
+                View Details
+              </button>
+            </div>
+            <div class="absolute top-2 left-2">
+              <span class="bg-gray-600 text-white px-2 py-1 rounded text-xs">🥈 Second Prize</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">The Story of Sanxingdui</h3>
+            <p class="text-gray-600 text-sm mb-3">Animation & video exploring Sanxingdui themes</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500">2024</span>
+              <div class="flex items-center">
+                <span class="text-gray-500 text-xs">★★★★☆</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QiTu App -->
+        <div class="portfolio-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1" data-category="digital awards interactive">
+          <div class="relative group">
+            <img src="image/IMG_8309.JPG" alt="QiTu App" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button class="bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors" onclick="openModal('modal6')">
+                View Details
+              </button>
+            </div>
+            <div class="absolute top-2 left-2">
+              <span class="bg-gray-600 text-white px-2 py-1 rounded text-xs">🥈 Second Prize</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">QiTu App</h3>
+            <p class="text-gray-600 text-sm mb-3">Visual communication design for mobile experience</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500">2023</span>
+              <div class="flex items-center">
+                <span class="text-gray-500 text-xs">★★★★☆</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="mb-8 bg-white rounded-lg shadow-sm p-6">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Portfolio Statistics</h2>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="p-4">
+          <div class="text-3xl font-bold text-blue-600 mb-2">6+</div>
+          <div class="text-gray-600">Projects Completed</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-bold text-green-600 mb-2">5</div>
+          <div class="text-gray-600">Awards Won</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-bold text-purple-600 mb-2">2</div>
+          <div class="text-gray-600">VR Experiences</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-bold text-orange-600 mb-2">3</div>
+          <div class="text-gray-600">Publications</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+   
+
+    <!-- Call to Action -->
+    <section class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4">Ready to Create Something Amazing?</h2>
+      <p class="text-purple-100 mb-6">Let's collaborate on your next VR project, digital design challenge, or research initiative.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="mailto:978294391@qq.com" class="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+          Start a Conversation
+        </a>
+        <a href="projects.html" class="border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors">
+          View More Projects
+        </a>
+      </div>
+    </section>
   </div>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-gray-600 text-sm">
+    <p>&copy; 2025 Yue Wu. All rights reserved.</p>
+  </footer>
+
+  <!-- Modals for detailed views -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modal1')">&times;</span>
+      <h2>VR Classroom Avatars</h2>
+      <div class="video-container">
+        <video controls poster="image/2.jpg">
+          <source src="video/3d avatar.mp4" type="video/mp4">
+        
+        </video>
+      </div>
+      <p>Comprehensive overview of the VR Classroom Avatars project, showcasing the AI integration and educational impact.</p>
+    </div>
+  </div>
+
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modal2')">&times;</span>
+      <h2>AR Story</h2>
+      <div class="video-container">
+        <video controls poster="image/3.png">
+          <source src="video/12月28日.mp4" type="video/mp4">
+          Your browser does not support video playback.
+        </video>
+      </div>
+      <p>Comprehensive overview of the VR Classroom Avatars project, showcasing the AI integration and educational impact.</p>
+    </div>
+  </div>
+
+  <div id="modal3" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('modal3')">&times;</span>
+      <h2>Animation </h2>
+      <div class="video-container">
+        <video controls poster="image/截屏2025-05-29 下午9.54.36.png">
+          <source src="video/202419001191+D4-2影像与动画+团年+视频类作品 .mp4" type="video/mp4">
+        </video>
+      </div>
+      <p>Comprehensive overview of the VR Classroom Avatars project, showcasing the AI integration and educational impact.</p>
+    </div>
+  </div>
+
+  <!-- Additional modals for other projects would go here -->
+
+  <script src="js/main.js"></script>
+  <script>
+    // Portfolio filtering functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const portfolioItems = document.querySelectorAll('.portfolio-item');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter');
+          
+          // Update active button
+          filterBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Filter items
+          portfolioItems.forEach(item => {
+            if (filter === 'all' || item.getAttribute('data-category').includes(filter)) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+    
+    // Modal functionality
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+  </script>
+
+  <style>
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      position: relative;
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+      top: 15px;
+    }
+    
+    .close:hover {
+      color: black;
+    }
+  </style>
 </body>
 </html>
