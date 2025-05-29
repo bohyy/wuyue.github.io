@@ -1,0 +1,114 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yue Wu / Portfolio</title>
+  <!-- Link to local Tailwind CSS file -->
+  <link href="dist/tailwind.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+    }
+    .sidebar {
+      width: 250px;
+      background: #f8f9fa;
+      padding: 20px;
+      position: fixed;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+      width: calc(100% - 270px);
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+      }
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <img src="images/profile.jpg" alt="Yue Wu" class="w-32 h-32 rounded-full mx-auto mb-4">
+    <h1 class="text-xl font-bold text-center">Yue Wu</h1>
+    <p class="text-center text-gray-700 mb-4">Graduate student in Fine Arts at Sichuan Normal University, with a background in Computer Science. Specializing in VR, Mixed Reality, and digital design. 🌟</p>
+    <ul class="space-y-2">
+      <li><a href="mailto:978294391@qq.com" class="text-blue-600 hover:underline">Email</a></li>
+      <li><a href="https://github.com/yourusername" class="text-blue-600 hover:underline">GitHub</a></li>
+    </ul>
+    <!-- Additional Photo Section -->
+    <div class="mt-4">
+      <img src="images/additional-photo.jpg" alt="Additional Photo" class="w-32 h-32 rounded mx-auto">
+      <p class="text-center text-gray-600 text-sm mt-2">Additional Photo</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navigation -->
+    <nav class="bg-[#CFC4BA] bg-opacity-80 text-white p-4 mb-4">
+      <div class="flex space-x-4">
+        <a href="cv.html" class="hover:underline">CV</a>
+        <a href="projects.html" class="hover:underline">Projects</a>
+        <a href="portfolio.html" class="hover:underline">Portfolio</a>
+      </div>
+    </nav>
+
+    <!-- Self-Introduction -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold mb-2">About Me 😊🌸</h2>
+      <p class="text-gray-700">Hello, I’m Yue Wu! 🎉 I’m a passionate graduate student pursuing a Master of Fine Arts at Sichuan Normal University in Chengdu, China. 🌺 With a Bachelor’s degree in Computer Sciences from Southwest Petroleum University, I blend technical expertise with creative artistry to explore innovative solutions in Virtual Reality (VR), Mixed Reality (MR), and Extended Reality (XR). 💻🎨 My work focuses on creating immersive experiences that address real-world challenges, like reducing stress through VR meditation 🌿 and enhancing classroom engagement with interactive VR avatars 👩‍🏫. I’m skilled in tools like Unity, Unreal Engine 5, and Blender, and I love filmmaking and digital design! 🎥✨ Explore my CV, projects, and portfolio to learn more about my journey and achievements! 🚀❤️</p>
+    </section>
+  </div>
+</body>
+</html>
